@@ -134,6 +134,10 @@ impl Material {
         let lightv = (light.position() - point).normalize();
         let ambient = effective_color * self.ambient;
 
+        if in_shadow {
+            return ambient;
+        }
+
         let light_dot_normal = lightv.dot(&normalv);
         let (diffuse, specular) = if light_dot_normal < 0.0 {
             (Pixel::black(), Pixel::black())
@@ -153,12 +157,8 @@ impl Material {
             (diffuse, specular)
         };
 
-        ambient
-            + if in_shadow {
-                Pixel::black()
-            } else {
-                diffuse + specular
-            }
+        ambient + diffuse + specular
+            
     }
 }
 

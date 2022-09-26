@@ -56,7 +56,8 @@ impl Intersection {
         comps.set_under_point(comps.point() - comps.normalv() * EPSILON);
 
         let mut containers: Vec<Shape> = vec![];
-        for i in xs {
+        for index in 0..xs.len() {
+            let i = xs[index];
             if i == *self {
                 if containers.is_empty() {
                     comps.set_n1(1.0);
@@ -140,7 +141,7 @@ impl Computations {
 
         if self.n1() > self.n2() {
             let n = self.n1() / self.n2();
-            let sin2_t = n*n * (1.0 - cos*cos);
+            let sin2_t = n.powi(2) * (1.0 - cos.powi(2));
             if sin2_t > 1.0 {
                 return 1.0;
             }

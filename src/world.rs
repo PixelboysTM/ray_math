@@ -76,13 +76,14 @@ impl World {
             shadowed,
         );
 
-        let reflected = self.reflected_color(comps, remaining);
-        let refracted = self.refracted_color(comps, remaining);
+        let mut reflected = self.reflected_color(comps, remaining);
+        let mut refracted = self.refracted_color(comps, remaining);
 
         let material = comps.object().material();
         if material.reflective() > 0.0 && material.transparency() > 0.0 {
             let reflectance = comps.schlick();
-            return surface + reflected * reflectance + refracted * (1.0 - reflectance);
+            reflected = reflected * reflectance;
+            refracted = refracted * (1.0 - reflectance);
         }
 
         surface + reflected + refracted
