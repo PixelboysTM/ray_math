@@ -79,6 +79,12 @@ impl World {
         let reflected = self.reflected_color(comps, remaining);
         let refracted = self.refracted_color(comps, remaining);
 
+        let material = comps.object().material();
+        if material.reflective() > 0.0 && material.transparency() > 0.0 {
+            let reflectance = comps.schlick();
+            return surface + reflected * reflectance + refracted * (1.0 - reflectance);
+        }
+
         surface + reflected + refracted
     }
 
@@ -123,19 +129,22 @@ impl World {
         if remaining < 1 || equal(comps.object().material().transparency(), 0.0) {
             Pixel::black()
         } else {
+            
             let n_ratio = comps.n1() / comps.n2();
             let cos_i = comps.eyev().dot(&comps.normalv());
-            let sin2_t = n_ratio*n_ratio * (1.0 - cos_i*cos_i);
-
+            let sin2_t = n_ratio.powi(2) * (1.0 - cos_i.powi(2));
+            
             if sin2_t > 1.0 {
                 Pixel::black()
             } else {
                 let cos_t = (1.0 - sin2_t).sqrt();
                 let direction = comps.normalv() * (n_ratio * cos_i - cos_t) - comps.eyev() * n_ratio;
-
-                let reflacted_ray = Ray::new(comps.under_point(), direction);
-
-                self.color_at(reflacted_ray, remaining - 1) * comps.object().material().transparency()
+                
+                let refracted_ray = Ray::new(comps.under_point(), direction);
+                
+                let color = self.color_at(refracted_ray, remaining - 1) * comps.object().material().transparency();
+                println!("=== remaining {} ===\nn1: {}\nn2: {}\neyev: {}\nnormalv: {}\nunder point: {}\nn_ratio: {}\ncos_i: {}\nsin2_t: {}\ncost_t: {}\nrefracted direction: {}\nrefracted color: {}\n", remaining, comps.n1(), comps.n2(), comps.eyev(), comps.normalv(), comps.under_point(), n_ratio, cos_i, sin2_t, cos_t, direction, color);
+                color
             }
         }
     }

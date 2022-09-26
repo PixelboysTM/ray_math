@@ -164,10 +164,6 @@ impl Material {
 
 impl PartialEq<Material> for Material {
     fn eq(&self, other: &Material) -> bool {
-        self.color == other.color
-            && self.ambient == other.ambient
-            && self.diffuse == other.diffuse
-            && self.specular == other.specular
-            && self.shininess == other.shininess
+        self.color == other.color && self.ambient == other.ambient && self.diffuse == other.diffuse && self.specular == other.specular && self.shininess == other.shininess && self.pattern == other.pattern && self.reflective == other.reflective && self.transparency == other.transparency && self.refractive_index == other.refractive_index
     }
 }

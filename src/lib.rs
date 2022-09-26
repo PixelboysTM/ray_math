@@ -44,7 +44,7 @@ where
 }
 
 mod img {
-    use std::ops::{Add, Mul};
+    use std::{ops::{Add, Mul}, fmt::Display};
 
     use crate::{equal, tuple::Tuple, Num};
 
@@ -185,6 +185,12 @@ mod img {
     impl PartialEq<Pixel> for Pixel {
         fn eq(&self, other: &Pixel) -> bool {
             equal(self.r, other.r) && equal(self.g, other.g) && equal(self.b, other.b)
+        }
+    }
+
+    impl Display for Pixel {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.write_str(format!("Rgb({}/{}/{})", self.r, self.g, self.b).as_str())
         }
     }
 }

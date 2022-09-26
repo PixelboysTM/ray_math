@@ -80,6 +80,11 @@ impl Camera {
         let mut image = Canvas::with_dimesnions(self.hsize() as u32, self.vsize() as u32);
         for x in 0..self.hsize() {
             for y in 0..self.vsize() {
+                println!("|||||||||||({}/{})|||||||||||", x, y);
+                if x == 125 && y == 125 {
+                    println!("");
+                }
+
                 let ray = self.ray_for_pixel(x as usize, y as usize);
                 let color = world.color_at(ray, MAX_RECURSION_DEPTH);
                 image.set(x as u32, y as u32, color);

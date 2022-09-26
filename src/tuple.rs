@@ -1,4 +1,4 @@
-use std::ops::{Add, Div, Mul, Neg, Sub};
+use std::{ops::{Add, Div, Mul, Neg, Sub}, fmt::Display};
 
 use crate::{equal, Num};
 
@@ -164,5 +164,18 @@ impl PartialEq<Tuple> for Tuple {
             && equal(self.y, other.y)
             && equal(self.z, other.z)
             && equal(self.w, other.w)
+    }
+}
+
+
+impl Display for Tuple {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        if self.is_point() {
+            f.write_str(format!("p({}/{}/{})", self.x, self.y, self.z).as_str())
+        } else if self.is_vector() {
+            f.write_str(format!("v({}/{}/{})", self.x, self.y, self.z).as_str())
+        } else {
+            f.write_str(format!("t({}/{}/{}/{})", self.x, self.y, self.z, self.w).as_str())
+        }
     }
 }

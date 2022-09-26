@@ -1591,7 +1591,7 @@ mod chapter10{
 mod chapter11{
     use std::vec;
 
-    use crate::{Material, equal, Shape, Ray, Tuple, Intersection, World, Pixel, Matrix4x4, Light, EPSILON, shape, Pattern};
+    use crate::{Material, equal, Shape, Ray, Tuple, Intersection, World, Pixel, Matrix4x4, Light, EPSILON, shape, Pattern, Camera};
 
 
     #[test]
@@ -1848,6 +1848,111 @@ mod chapter11{
             let color = w.shade_hit(comps, 5);
             assert!(color == Pixel::rgb(0.93642, 0.68642, 0.68642));
         }
+    }
+
+    #[test]
+    fn frenel_effect(){
+        {
+            let shape = glass_sphere();
+            let r = Ray::new(Tuple::point(0, 0, 2f64.sqrt()/2.0), Tuple::vector(0, 1, 0));
+            let xs = vec![Intersection::new(-2f64.sqrt()/2.0, shape), Intersection::new(2f64.sqrt()/2.0, shape)];
+            let comps = xs[1].clone().prepare_computations(r, xs);
+            let reflectance = comps.schlick();
+            assert!(equal(reflectance, 1.0));
+        }
+
+        {
+            let shape = glass_sphere();
+            let r = Ray::new(Tuple::point(0, 0, 0), Tuple::vector(0, 1, 0));
+            let xs = vec![Intersection::new(-1, shape), Intersection::new(1, shape)];
+            let comps = xs[1].clone().prepare_computations(r, xs);
+            let reflectance = comps.schlick();
+            assert!(equal(reflectance, 0.04));
+        }
+
+        {
+            let shape = glass_sphere();
+            let r = Ray::new(Tuple::point(0, 0.99, -2), Tuple::vector(0, 0, 1));
+            let xs = vec![Intersection::new(1.8589, shape)];
+            let comps = xs[0].clone().prepare_computations(r, xs);
+            let reflectance = comps.schlick();
+            assert!(equal(reflectance, 0.48873));
+        }
+
+        {
+            let mut w = World::default();
+            let r = Ray::new(Tuple::point(0, 0, -3), Tuple::vector(0, -2f64.sqrt()/2.0, 2f64.sqrt()/2.0));
+
+            let mut floor = Shape::plane();
+            floor.set_transform(Matrix4x4::translation(0, -1, 0));
+            let mut floor_mat = floor.material();
+            floor_mat.set_reflective(0.5);
+            floor_mat.set_transparency(0.5);
+            floor_mat.set_refractive_index(1.5);
+            floor.set_material(floor_mat);
+
+            let mut ball = Shape::sphere();
+            ball.set_transform(Matrix4x4::translation(0, -3.5, -0.5));
+            let mut ball_mat = ball.material();
+            ball_mat.set_color(Pixel::red());
+            ball_mat.set_ambient(0.5);
+            ball.set_material(ball_mat);
+
+            let mut objs = w.objects();
+            objs.append(&mut vec![floor, ball]);
+            w.set_objects(objs);
+
+            let xs = vec![Intersection::new(2f64.sqrt(), floor)];
+            let comps = xs[0].clone().prepare_computations(r, xs);
+            let color = w.shade_hit(comps, 5);
+            assert!(color == Pixel::rgb(0.93391, 0.69643, 0.69243));
+        }
+    }
+
+    #[test]
+    fn testting_it(){
+        let mut w = World::new();
+    w.set_light(Light::point(Tuple::point(2, 10, -5), Pixel::rgb(0.9, 0.9, 0.9)));
+
+    let mut wall = Shape::plane();
+    wall.set_transform(Matrix4x4::translation(0, 0, 10) * Matrix4x4::rotation_x(1.5708));
+    let mut floor_mat = wall.material();
+    floor_mat.set_pattern(Pattern::checkers(Pixel::white(), Pixel::black()));
+    floor_mat.set_ambient(0.8);
+    floor_mat.set_diffuse(0.2);
+    floor_mat.set_specular(0);
+    wall.set_material(floor_mat);
+
+    let mut glass_sphere = Shape::sphere();
+    let mut glass_sphere_mat = glass_sphere.material();
+    glass_sphere_mat.set_diffuse(0);
+    glass_sphere_mat.set_shininess(300);
+    glass_sphere_mat.set_transparency(0.9);
+    glass_sphere_mat.set_reflective(0.9);
+    glass_sphere_mat.set_refractive_index(1.5);
+    glass_sphere_mat.set_ambient(0);
+    glass_sphere_mat.set_color(Pixel::white());
+    glass_sphere_mat.set_specular(0.9);
+    glass_sphere.set_material(glass_sphere_mat);
+    // glass_sphere.set_transform(Matrix4x4::scaling(0.5, 0.5, 0.5));
+
+    let mut air_sphere = Shape::sphere();
+    air_sphere.set_transform(Matrix4x4::scaling(0.5, 0.5, 0.5));
+    let mut air_sphere_mat = air_sphere.material();
+    air_sphere_mat.set_color(Pixel::white());
+    air_sphere_mat.set_diffuse(0);
+    air_sphere_mat.set_shininess(300);
+    air_sphere_mat.set_reflective(0.9);
+    air_sphere_mat.set_transparency(0.9);
+    air_sphere_mat.set_ambient(0);
+    air_sphere_mat.set_specular(0.9);
+    air_sphere_mat.set_refractive_index(1.0000034);
+    air_sphere.set_material(air_sphere_mat);
+
+    w.set_objects(vec![wall,glass_sphere, air_sphere]);
+
+    let camera = Camera::with_transform(300, 300, 0.45, Matrix4x4::view(Tuple::point(0, 0, -5), Tuple::point(0, 0, 0), Tuple::vector(0, 1, 0)));
+    camera.render(w);
     }
 
     fn glass_sphere() -> Shape{
