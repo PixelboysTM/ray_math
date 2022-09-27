@@ -81,9 +81,9 @@ impl Camera {
         for x in 0..self.hsize() {
             for y in 0..self.vsize() {
                 println!("|||||||||||({}/{})|||||||||||", x, y);
-                if x == 125 && y == 125 {
-                    println!("");
-                }
+                // if x == 125 && y == 125 {
+                //     println!("");
+                // }
 
                 let ray = self.ray_for_pixel(x as usize, y as usize);
                 let color = world.color_at(ray, MAX_RECURSION_DEPTH);

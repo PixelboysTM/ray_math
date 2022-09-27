@@ -1917,7 +1917,7 @@ mod chapter11{
     let mut wall = Shape::plane();
     wall.set_transform(Matrix4x4::translation(0, 0, 10) * Matrix4x4::rotation_x(1.5708));
     let mut floor_mat = wall.material();
-    floor_mat.set_pattern(Pattern::checkers(Pixel::white(), Pixel::black()));
+    floor_mat.set_pattern(Pattern::checkers(Pixel::rgb(0.15,0.15,0.15), Pixel::rgb(0.85,0.85,0.85)));
     floor_mat.set_ambient(0.8);
     floor_mat.set_diffuse(0.2);
     floor_mat.set_specular(0);
@@ -1952,7 +1952,9 @@ mod chapter11{
     w.set_objects(vec![wall,glass_sphere, air_sphere]);
 
     let camera = Camera::with_transform(300, 300, 0.45, Matrix4x4::view(Tuple::point(0, 0, -5), Tuple::point(0, 0, 0), Tuple::vector(0, 1, 0)));
-    camera.render(w);
+    let r = camera.ray_for_pixel(125, 125);
+    let color = w.color_at(r, 5);
+    println!("{}", color);
     }
 
     fn glass_sphere() -> Shape{

@@ -70,7 +70,7 @@ impl World {
         let surface = comps.object().material().lighting(
             &comps.object(),
             &self.light().unwrap(),
-            comps.point(),
+            comps.over_point(), // CHanged from point
             comps.eyev(),
             comps.normalv(),
             shadowed,

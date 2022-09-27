@@ -1,0 +1,55 @@
+
+running 45 tests
+test tests::chapter10::making_a_gradient_pattern ... ok
+test tests::chapter10::making_a_ring_pattern ... ok
+test tests::chapter10::making_a_3d_checker_pattern ... ok
+test tests::chapter10::making_a_stripped_pattern ... ok
+test tests::chapter10::transforming_patterns ... ok
+test tests::chapter1::cross ... ok
+test tests::chapter1::adding ... ok
+test tests::chapter11::frenel_effect ... ok
+test tests::chapter1::dot ... ok
+test tests::chapter1::magnitude ... ok
+test tests::chapter1::mul ... ok
+test tests::chapter1::normalize ... ok
+test tests::chapter1::subtracting ... ok
+test tests::chapter3::creating2x2 ... ok
+test tests::chapter3::creating4x4 ... ok
+test tests::chapter11::transparency_and_refraction ... ok
+test tests::chapter3::creating3x3 ... ok
+test tests::chapter3::matrices ... ok
+test tests::chapter3::inverse ... ok
+test tests::chapter4::shaining ... ok
+test tests::chapter4::scaling ... ok
+test tests::chapter4::rotation ... ok
+test tests::chapter4::shearing ... ok
+test tests::chapter5::creating_rays ... ok
+test tests::chapter4::translation ... ok
+test tests::chapter5::identifying_hits ... ok
+test tests::chapter5::intersecting_ras_with_speheres ... ok
+test tests::chapter5::tracking_intersections ... ok
+test tests::chapter6::phong_relfection ... ok
+test tests::chapter6::reflecting_vectors ... ok
+test tests::chapter5::transforming_rays_and_spheres ... ok
+test tests::chapter6::surface_normals ... ok
+test tests::chapter11::reflection ... ok
+test tests::chapter7::building_a_world ... ok
+test tests::chapter7::defining_a_view_transform ... ok
+test tests::chapter11::testting_it ... ok
+test tests::chapter8::lighting_in_shadows ... ok
+test tests::chapter8::rendering_shadows ... ok
+test tests::chapter8::testing_for_shadows ... ok
+test tests::chapter9::implementing_a_plane ... ok
+test tests::chapter9::refactoring_shapes ... ok
+test tests::chapter7::implementing_a_camera ... ok
+test tests::chapter5::putting_it_together ... ok
+test tests::chapter6::putting_it_together ... ok
+test tests::chapter7::putting_it_together ... ok
+
+test result: ok. 45 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 6.87s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

@@ -1,4 +1,4 @@
-use std::ops::Mul;
+use std::{ops::Mul};
 
 use crate::{equal, matrix3x3::Matrix3x3, tuple::Tuple, Num};
 
@@ -103,25 +103,29 @@ impl Matrix4x4 {
     }
 
     pub fn inverse(&self) -> Result<Matrix4x4, String> {
-        if !self.invertible() {
+        inv(self)
+    }
+
+    fn index(&self, row: usize, col: usize) -> usize {
+        row * 4 + col
+    }
+}
+
+fn inv(mat: &Matrix4x4) -> Result<Matrix4x4, String>{
+    if !mat.invertible() {
             Err("Matrix not invertible.".to_string())
         } else {
             let mut m2 = Matrix4x4::identity();
-            let det = self.determinant();
+            let det = mat.determinant();
             for row in 0..4 {
                 for col in 0..4 {
-                    let c = self.cofactor(row, col);
+                    let c = mat.cofactor(row, col);
                     m2.set(col, row, c / det);
                 }
             }
 
             Ok(m2)
         }
-    }
-
-    fn index(&self, row: usize, col: usize) -> usize {
-        row * 4 + col
-    }
 }
 
 impl PartialEq<Matrix4x4> for Matrix4x4 {
